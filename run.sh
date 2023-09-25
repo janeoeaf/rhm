@@ -20,4 +20,4 @@ Rscript 1_create_windows.R
 Rscript 2_make_grm.R
 Rscript 3_rhm.R
 Rscript 4_plot_rhm.R
-
+Rscript 5_sync.R
