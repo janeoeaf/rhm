@@ -1,6 +1,7 @@
 rm(list=ls())
 library(snpStats)
 library(sommer)
+library(dplyr)
 w<-.99
 
 
