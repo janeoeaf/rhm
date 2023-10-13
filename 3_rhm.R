@@ -15,14 +15,16 @@ VC=NULL
 for(tr in traits){
     phe3=phe2
     colnames(phe3)[colnames(phe3)==tr]='y'
-    fit0=mmer(fixed = y~covar1+covar2,random=~vsr(id,Gu=GRM),data=phe3,nIters = 50)
-    vc00=summary(fit0)$varcomp[c('u:id.y-y','units.y-y'),'VarComp']
-    names(vc00)=c('vc_gen_main_model','vc_error_main_model')
+
     
     for(wind in 1:length(GRMlist)){
     
+          fit0=mmer(fixed = y~covar1+covar2,random=~vsr(id,Gu=GRMlistRemain[[wind]]),data=phe3,nIters = 50)
+          vc00=summary(fit0)$varcomp[c('u:id.y-y','units.y-y'),'VarComp']
+          names(vc00)=c('vc_gen_main_model','vc_error_main_model')
+      
           fiti=mmer(fixed = y~covar1+covar2,random=~vsr(id2,Gu=GRMlist[[wind]])+
-                      vsr(id,Gu=GRM),data=phe3,nIters = 50)
+                      vsr(id,Gu=GRMlistRemain[[wind]]),data=phe3,nIters = 50)
           
           logL0=summary(fit0)$log[1,1]
           logL1=summary(fiti)$log[1,1]
@@ -38,11 +40,13 @@ for(tr in traits){
           vc=data.frame(t(vc00),t(vc0),
                      trait=tr,region=wind,
                      windown_rhm[wind,],
-                     congergence=fiti$convergence,chisq=chisq,pval=pval)
+                     congergence1=fiti$convergence,
+                     congergence0=fit0$convergence,
+                     chisq=chisq,pval=pval)
           VC=rbind(vc,VC)
           
     }
 }
 
 
-readr::write_csv(VC,'output/rhm.csv')
+readr::write_csv(VC %>% mutate(minuslog10pvalue=-log10(pval)),'output/rhm.csv')

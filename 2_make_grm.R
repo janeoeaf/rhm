@@ -21,6 +21,7 @@ GRM<-w*A.mat(snp)+diag(nrow(snp))*(1-w)
 #GRM regional#
 ##############
 GRMlist<-list()
+GRMlistRemain=list()
 for(i in 1:nrow(windown_rhm)){
   windi<-windown_rhm[i,]
   
@@ -28,8 +29,18 @@ for(i in 1:nrow(windown_rhm)){
   snp1_order<-which(colnames(snp)==as.character(windi[1,2]))
   
   snpr<-as(gp$geno[,snp0_order:snp1_order],'numeric')-1
+  snpremain<-as(gp$geno[,-c(snp0_order:snp1_order)],'numeric')-1
+  
   if(ncol(snpr)!=windi[1,6]) stop('erro 123')
+  if(ncol(snpremain)!=(ncol(snp)-windi[1,6])) stop('erro 456')
+  
   Gr<-w*A.mat(snpr)+diag(nrow(snpr))*(1-w)
   GRMlist[[length(GRMlist)+1]]<-Gr
+  
+  Gremain<-w*A.mat(snpremain)+diag(nrow(snpremain))*(1-w)
+  GRMlistRemain[[length(GRMlistRemain)+1]]<-Gremain
+  
+  
+  
 }
-save(GRM,GRMlist,windown_rhm,file='tmp/grm.Rdata')
+save(GRM,GRMlist,GRMlistRemain,windown_rhm,file='tmp/grm.Rdata')

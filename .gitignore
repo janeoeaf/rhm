@@ -52,3 +52,11 @@ rsconnect/
 tmp*
 src*
 output*
+
+tassel-5-standalone*
+
+
+plink*
+prettify
+toy.map
+toy.ped
